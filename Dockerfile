@@ -37,6 +37,7 @@ WORKDIR /etc/nginx/
 # Configure nginx
 RUN mkdir /var/ngx_pagespeed_cache
 RUN chmod 777 /var/ngx_pagespeed_cache
+COPY proxy_params /etc/nginx/proxy_params
 COPY nginx.conf /etc/nginx/conf/nginx.conf
 COPY sites-enabled /etc/nginx/sites-enabled
 
