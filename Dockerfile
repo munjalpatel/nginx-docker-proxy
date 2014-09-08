@@ -40,4 +40,5 @@ RUN chmod 777 /var/ngx_pagespeed_cache
 COPY nginx.conf /etc/nginx/conf/nginx.conf
 COPY sites-enabled /etc/nginx/sites-enabled
 
+WORKDIR /app
 CMD ["forego", "start", "-r"]
