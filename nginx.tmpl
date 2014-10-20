@@ -7,15 +7,14 @@ server {
 }
 
 {{ range $host, $containers := groupByMulti $ "Env.VIRTUAL_HOST" "," }}
-upstream {{ $host }} {
-
+{{ range $path, $containers := groupByMulti $ "Env.VIRTUAL_PATH" "," }}
 {{ range $index, $value := $containers }}
 
+upstream {{ $value.Name }} {
 	{{ $addrLen := len $value.Addresses }}
 	{{/* If only 1 port exposed, use that */}}
 	{{ if eq $addrLen 1 }}
 		{{ with $address := index $value.Addresses 0 }}
-		   # {{$value.Name}}
 		   server {{ $address.IP }}:{{ $address.Port }};
 		{{ end }}
 
@@ -23,7 +22,6 @@ upstream {{ $host }} {
 	{{ else if $value.Env.VIRTUAL_PORT }}
 		{{ range $i, $address := $value.Addresses }}
 		   {{ if eq $address.Port $value.Env.VIRTUAL_PORT }}
-		   # {{$value.Name}}
 		   server {{ $address.IP }}:{{ $address.Port }};
 		   {{ end }}
 		{{ end }}
@@ -32,12 +30,10 @@ upstream {{ $host }} {
 	{{ else }}
 		{{ range $i, $address := $value.Addresses }}
 			{{ if eq $address.Port "80" }}
-			# {{$value.Name}}
 			server {{ $address.IP }}:{{ $address.Port }};
 			{{ end }}
 		{{ end }}
 	{{ end }}
-{{ end }}
 }
 
 server {
@@ -45,11 +41,11 @@ server {
 
 	server_name {{ $host }};
 	proxy_buffering off;
-	error_log /proc/self/fd/2;
-	access_log /proc/self/fd/1;
+    error_log /proc/self/fd/2;
+    access_log /proc/self/fd/1;
 
-	location / {
-		proxy_pass http://{{ $host }};
+	location {{ $path }} {
+		proxy_pass http://{{ $value.Name }};
 		include /etc/nginx/proxy_params;
 
 		# HTTP 1.1 support
@@ -57,4 +53,7 @@ server {
 		proxy_set_header Connection "";
 	}
 }
+
+{{ end }}
+{{ end }}
 {{ end }}
