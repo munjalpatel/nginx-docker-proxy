@@ -37,6 +37,9 @@ upstream {{ $value.Name }} {
 }
 
 server {
+    ssl_certificate /etc/nginx/certs/nginx.pem;
+    ssl_certificate_key /etc/nginx/certs/nginx.key;
+        
 	gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
 	server_name {{ $host }};
