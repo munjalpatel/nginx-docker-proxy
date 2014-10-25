@@ -40,8 +40,6 @@ RUN chmod 777 /var/ngx_pagespeed_cache
 COPY proxy_params /etc/nginx/proxy_params
 COPY nginx.conf /etc/nginx/conf/nginx.conf
 COPY sites-enabled /etc/nginx/sites-enabled
-COPY nginx.crt /etc/nginx/certs/nginx.crt
-COPY nginx.key /etc/nginx/certs/nginx.key
 
 WORKDIR /app
 CMD ["forego", "start", "-r"]
