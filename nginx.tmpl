@@ -37,6 +37,10 @@ upstream {{ $value.Name }} {
 }
 
 server {
+    listen 80 default_server;
+    listen [::]:80 default_server ipv6only=on;
+    listen 443 ssl;
+    
     ssl_certificate /etc/nginx/certs/nginx.crt;
     ssl_certificate_key /etc/nginx/certs/nginx.key;
         
