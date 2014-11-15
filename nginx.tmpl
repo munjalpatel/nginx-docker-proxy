@@ -60,7 +60,6 @@ server {
     
 	location {{ $path }} {
 		proxy_pass http://{{ $innerValue.Name }};
-                try_files $uri $uri/ /index.html;
 		include /etc/nginx/proxy_params;
 
 		# HTTP 1.1 support
